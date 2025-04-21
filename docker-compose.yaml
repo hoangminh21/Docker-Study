@@ -1,0 +1,41 @@
+services:
+  pgdatabase:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: ny_taxi
+      PGDATA: /var/lib/postgresql/ny_taxi_data
+    ports:
+      - "5433:5432"
+    volumes:
+      - type: volume
+        source: ny_taxi_data
+        target: /var/lib/postgresql/ny_taxi_data
+        volume:
+          nocopy: true
+      - type: volume
+        source: zone_lookup
+        target: /var/lib/postgresql/data/zone_lookup
+        volume:
+          nocopy: true
+    
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "5434:80"
+
+volumes:
+  ny_taxi_data:
+    external: true
+  zone_lookup:
+    external: true
+  pgadmin_data:         # ✅ Add this line to define the volume for pgAdmin
