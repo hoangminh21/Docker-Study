@@ -8,9 +8,10 @@ terraform {
 }
 
 provider "google" {
-  # Configuration options
-  project     = "terraform-study-457716"
-  region      = "asia-southeast1-a"
+  credentials = file(var.credentials_file)
+  project     = var.project_id
+  region      = var.region
+  zone        = var.zone
 }
 
 resource "google_storage_bucket" "demo-bucket" {
